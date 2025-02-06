@@ -3,15 +3,16 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 5f;
-    [SerializeField] Camera mainCamera;
+    [SerializeField] int health = 3;
 
     private Rigidbody2D rb;
     private Vector2 movement;
-    private Vector2 mousePos;
+    private Animator anim;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -19,15 +20,28 @@ public class PlayerController : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        if(movement != Vector2.zero)
+        {
+            anim.SetBool("isWalking", true);
+        }
+        else
+        {
+            anim.SetBool("isWalking", false);
+        }
     }
 
     private void FixedUpdate()
     {
         rb.linearVelocity = movement.normalized * moveSpeed;
+    }
 
-        Vector2 lookDir = mousePos - rb.position;
-        float angle = Mathf.Atan2(lookDir.x, lookDir.y) * Mathf.Rad2Deg;
-        rb.rotation = angle;
+    public void TakeDamage(int damageAmount)
+    {
+        health -= damageAmount;
+
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
