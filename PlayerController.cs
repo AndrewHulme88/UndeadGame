@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] int health = 3;
+    [SerializeField] Image[] hearts;
+    [SerializeField] Sprite fullHeart;
+    [SerializeField] Sprite emptyHeart;
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -13,6 +17,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        UpdateHealthUI(health);
     }
 
     void Update()
@@ -38,10 +43,26 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damageAmount)
     {
         health -= damageAmount;
+        UpdateHealthUI(health);
 
         if (health <= 0)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void UpdateHealthUI(int currentHealth)
+    {
+        for(int i = 0; i < hearts.Length; i++)
+        {
+            if(i < currentHealth)
+            {
+                hearts[i].sprite = fullHeart;
+            }
+            else
+            {
+                hearts[i].sprite = emptyHeart;
+            }
         }
     }
 }
