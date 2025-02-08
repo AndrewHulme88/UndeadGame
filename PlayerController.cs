@@ -65,4 +65,18 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void Heal(int healAmount)
+    {
+        if(health + healAmount > 3)
+        {
+            health = 3;
+        }
+        else
+        {
+            health += healAmount;
+        }
+
+        UpdateHealthUI(health);
+    }
 }
