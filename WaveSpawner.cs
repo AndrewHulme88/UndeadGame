@@ -14,6 +14,8 @@ public class WaveSpawner : MonoBehaviour
     public Wave[] waves;
     public Transform[] spawnPoints;
     public float timeBetweenWaves;
+    public GameObject boss;
+    public Transform bossSpawnPoint;
 
     private Wave currentWave;
     private int currentWaveIndex;
@@ -72,7 +74,7 @@ public class WaveSpawner : MonoBehaviour
             }
             else
             {
-                Debug.Log("Game Finished!!");
+                Instantiate(boss, bossSpawnPoint.position, bossSpawnPoint.rotation);
             }
         }
     }

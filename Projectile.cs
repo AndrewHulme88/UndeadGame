@@ -30,5 +30,11 @@ public class Projectile : MonoBehaviour
             collision.GetComponent<Enemy>().TakeDamage(damage);
             DestroyProjectile();
         }
+
+        if (collision.tag == "BossBigMumma")
+        {
+            collision.GetComponent<BossBigMumma>().TakeDamage(damage);
+            DestroyProjectile();
+        }
     }
 }
