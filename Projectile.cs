@@ -5,6 +5,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] float speed = 5f;
     [SerializeField] float lifeTime = 5f;
     [SerializeField] int damage = 1;
+    [SerializeField] GameObject particles;
 
     void Start()
     {
@@ -18,7 +19,7 @@ public class Projectile : MonoBehaviour
 
     private void DestroyProjectile()
     {
-        // create particles
+        Instantiate(particles, transform.position, transform.rotation);
 
         Destroy(gameObject);
     }
@@ -30,10 +31,15 @@ public class Projectile : MonoBehaviour
             collision.GetComponent<Enemy>().TakeDamage(damage);
             DestroyProjectile();
         }
-
+        
         if (collision.tag == "BossBigMumma")
         {
             collision.GetComponent<BossBigMumma>().TakeDamage(damage);
+            DestroyProjectile();
+        }
+
+        if(collision.tag == "World")
+        {
             DestroyProjectile();
         }
     }

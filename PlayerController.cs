@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,16 +9,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Image[] hearts;
     [SerializeField] Sprite fullHeart;
     [SerializeField] Sprite emptyHeart;
+    [SerializeField] float invincibilityDuration = 1f;
 
     private Rigidbody2D rb;
     private Vector2 movement;
     private Animator anim;
+    private ScreenShake screenShake;
+    private bool isInvincible = false;
+    private SceneTransitions sceneTransitions;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         UpdateHealthUI(health);
+        screenShake = FindFirstObjectByType<ScreenShake>();
+        sceneTransitions = FindFirstObjectByType<SceneTransitions>();
     }
 
     void Update()
@@ -42,13 +49,32 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
+        if(isInvincible)
+        {
+            return;
+        }
+
+        anim.SetTrigger("hit");
+        screenShake.TriggerShake();
         health -= damageAmount;
         UpdateHealthUI(health);
 
         if (health <= 0)
         {
             Destroy(gameObject);
+            sceneTransitions.LoadScene("GameOver");
         }
+        else
+        {
+            StartCoroutine(InvincibilityFrames());
+        }
+    }
+
+    private IEnumerator InvincibilityFrames()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(invincibilityDuration);
+        isInvincible = false;
     }
 
     private void UpdateHealthUI(int currentHealth)
