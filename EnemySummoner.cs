@@ -11,6 +11,8 @@ public class EnemySummoner : Enemy
     [SerializeField] Enemy enemyToSummon;
     [SerializeField] float attackSpeed = 1f;
     [SerializeField] float stopDistance = 3f;
+    [SerializeField] GameObject jumpParticles;
+    [SerializeField] ParticleSystem dustParticles;
 
     private Vector2 targetPosition;
     private Animator anim;
@@ -22,9 +24,7 @@ public class EnemySummoner : Enemy
         base.Start();
         anim = GetComponent<Animator>();
 
-        float randomX = Random.Range(minX, maxX);
-        float randomY = Random.Range(minY, maxY);
-        targetPosition = new Vector2(randomX, randomY);
+        PickNewTargetPosition();
     }
 
     private void Update()
@@ -35,12 +35,22 @@ public class EnemySummoner : Enemy
             {
                 transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
                 anim.SetBool("isRunning", true);
+
+                if (!dustParticles.isPlaying)
+                {
+                    dustParticles.Play();
+                }
             }
             else
             {
                 anim.SetBool("isRunning", false);
 
-                if(Time.time >= summonTime)
+                if (dustParticles.isPlaying)
+                {
+                    dustParticles.Stop();
+                }
+
+                if (Time.time >= summonTime)
                 {
                     summonTime = Time.time + timeBetweenSumons;
                     anim.SetTrigger("summon");
@@ -58,10 +68,26 @@ public class EnemySummoner : Enemy
         }
     }
 
+    private void PickNewTargetPosition()
+    {
+        float randomX = Random.Range(minX, maxX);
+        float randomY = Random.Range(minY, maxY);
+        targetPosition = new Vector2(randomX, randomY);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("World"))
+        {
+            PickNewTargetPosition();
+        }
+    }
+
     public void Summon()
     {
         if (player != null)
         {
+            Instantiate(jumpParticles, transform.position, transform.rotation);
             Instantiate(enemyToSummon, transform.position, transform.rotation);
         }
     }

@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public int damage = 1;
     public int pickupChance = 10;
     public GameObject[] pickups;
+    public GameObject deathParticles;
 
     [HideInInspector]
     public Transform player;
@@ -24,6 +25,7 @@ public class Enemy : MonoBehaviour
 
         if(health <= 0)
         {
+            Instantiate(deathParticles, transform.position, transform.rotation);
             int randomNumber = Random.Range(0, 101);
             if(randomNumber < pickupChance)
             {
