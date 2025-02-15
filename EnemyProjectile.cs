@@ -5,6 +5,7 @@ public class EnemyProjectile : MonoBehaviour
 {
     [SerializeField] float speed = 15f;
     [SerializeField] int damage = 1;
+    [SerializeField] GameObject particles;
 
     private PlayerController playerController;
     private Vector2 targetPosition;
@@ -25,9 +26,17 @@ public class EnemyProjectile : MonoBehaviour
             }
             else
             {
+                Instantiate(particles, transform.position, transform.rotation);
                 Destroy(gameObject);
             }
         }
+    }
+
+    private void DestroyProjectile()
+    {
+        Instantiate(particles, transform.position, transform.rotation);
+
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,7 +44,13 @@ public class EnemyProjectile : MonoBehaviour
         if(collision.tag == "Player")
         {
             playerController.TakeDamage(damage);
+            Instantiate(particles, transform.position, transform.rotation);
             Destroy(gameObject);
+        }
+
+        if (collision.tag == "World")
+        {
+            DestroyProjectile();
         }
     }
 }

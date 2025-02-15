@@ -17,7 +17,7 @@ public class BossBigMumma : MonoBehaviour
     private Animator anim;
     private Slider healthBar;
     private SceneTransitions sceneTransitions;
-    private BoxCollider2D boxCollider2D;
+    private CircleCollider2D circleCollider;
     private BigMummaPatrolBehaviour patrolBehaviour;
 
     private void Start()
@@ -28,7 +28,7 @@ public class BossBigMumma : MonoBehaviour
         healthBar.maxValue = health;
         healthBar.value = health;
         sceneTransitions = FindFirstObjectByType<SceneTransitions>();
-        boxCollider2D = GetComponent<BoxCollider2D>();
+        circleCollider = GetComponent<CircleCollider2D>();
         patrolBehaviour = GetComponent<Animator>().GetBehaviour<BigMummaPatrolBehaviour>();
     }
 
@@ -76,7 +76,7 @@ public class BossBigMumma : MonoBehaviour
 
     public void TurnOnCollider()
     {
-        boxCollider2D.enabled = true;
+        circleCollider.enabled = true;
     }
 
     public void DustParticleLeft()

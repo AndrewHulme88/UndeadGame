@@ -9,15 +9,12 @@ public class EnemySummoner : Enemy
     [SerializeField] float maxY;
     [SerializeField] float timeBetweenSumons = 7f;
     [SerializeField] Enemy enemyToSummon;
-    [SerializeField] float attackSpeed = 1f;
-    [SerializeField] float stopDistance = 3f;
     [SerializeField] GameObject jumpParticles;
     [SerializeField] ParticleSystem dustParticles;
 
     private Vector2 targetPosition;
     private Animator anim;
     private float summonTime;
-    private float attackTime;
 
     public override void Start()
     {
@@ -56,15 +53,6 @@ public class EnemySummoner : Enemy
                     anim.SetTrigger("summon");
                 }
             }
-
-            if (Vector2.Distance(transform.position, player.position) <= stopDistance)
-            {
-                if (Time.time >= attackTime)
-                {
-                    StartCoroutine(Attack());
-                    attackTime = Time.time + timeBetweenAttacks;
-                }
-            }
         }
     }
 
@@ -88,24 +76,12 @@ public class EnemySummoner : Enemy
         if (player != null)
         {
             Instantiate(jumpParticles, transform.position, transform.rotation);
-            Instantiate(enemyToSummon, transform.position, transform.rotation);
+            DustParticles();
         }
     }
 
-    IEnumerator Attack()
+    public void DustParticles()
     {
-        player.GetComponent<PlayerController>().TakeDamage(damage);
-
-        Vector2 originalPosition = transform.position;
-        Vector2 targetPosition = player.position;
-
-        float percent = 0f;
-        while (percent <= 1)
-        {
-            percent += Time.deltaTime * attackSpeed;
-            float formula = (-Mathf.Pow(percent, 2) + percent) * 4;
-            transform.position = Vector2.Lerp(originalPosition, targetPosition, formula);
-            yield return null;
-        }
+        Instantiate(enemyToSummon, transform.position, transform.rotation);
     }
 }

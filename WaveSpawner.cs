@@ -11,11 +11,13 @@ public class WaveSpawner : MonoBehaviour
         public float timeBetweenSpawns;
     }
 
-    public Wave[] waves;
-    public Transform[] spawnPoints;
-    public float timeBetweenWaves;
-    public GameObject boss;
-    public Transform bossSpawnPoint;
+    [SerializeField] Wave[] waves;
+    [SerializeField] Transform[] spawnPoints;
+    [SerializeField] float timeBetweenWaves;
+    [SerializeField] GameObject boss;
+    [SerializeField] Transform bossSpawnPoint;
+
+    public GameObject healthBar;
 
     private Wave currentWave;
     private int currentWaveIndex;
@@ -75,6 +77,7 @@ public class WaveSpawner : MonoBehaviour
             else
             {
                 Instantiate(boss, bossSpawnPoint.position, bossSpawnPoint.rotation);
+                healthBar.SetActive(true);
             }
         }
     }

@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Sprite fullHeart;
     [SerializeField] Sprite emptyHeart;
     [SerializeField] float invincibilityDuration = 1f;
+    [SerializeField] ParticleSystem dustParticles;
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -35,10 +36,20 @@ public class PlayerController : MonoBehaviour
         if(movement != Vector2.zero)
         {
             anim.SetBool("isWalking", true);
+            
+            if(!dustParticles.isPlaying)
+            {
+                dustParticles.Play();
+            }
         }
         else
         {
             anim.SetBool("isWalking", false);
+
+            if(dustParticles.isPlaying)
+            {
+                dustParticles.Stop();
+            }
         }
     }
 

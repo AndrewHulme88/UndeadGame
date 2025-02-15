@@ -5,6 +5,7 @@ public class EnemyMelee : Enemy
 {
     [SerializeField] float stopDistance = 3f;
     [SerializeField] float attackSpeed = 8f;
+    [SerializeField] ParticleSystem dustParticles;
 
     private float attackTime = 0f;
 
@@ -14,16 +15,31 @@ public class EnemyMelee : Enemy
         {
             if(Vector2.Distance(transform.position, player.position) > stopDistance)
             {
-                transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+                MoveTowardsPlayer();
             }
             else
             {
                 if(Time.time >= attackTime)
                 {
+                    if (dustParticles.isPlaying)
+                    {
+                        dustParticles.Stop();
+                    }
+
                     StartCoroutine(Attack());
                     attackTime = Time.time + timeBetweenAttacks;
                 }
             }
+        }
+    }
+
+    private void MoveTowardsPlayer()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+
+        if (!dustParticles.isPlaying)
+        {
+            dustParticles.Play();
         }
     }
 
